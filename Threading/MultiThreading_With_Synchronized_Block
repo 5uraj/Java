@@ -1,0 +1,89 @@
+import java.util.*;
+class Prime{
+	
+	int s,e;
+	Prime()
+	{
+		s=0;
+		e=0;
+	}	
+	
+	boolean checkPrimeOrNot(int n)
+	{	
+		for(int i=2;i<n;i++)
+		{
+			if(n%i == 0)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	void prime(int s,int e)
+	{
+		this.s=s;
+		this.e=e;
+		for(int i=s;i<e;i++)
+		{
+			if(checkPrimeOrNot(i) == true)
+			{
+				System.out.println(Thread.currentThread().getName()+" "+i);
+			}
+			try{
+				Thread.sleep(100);
+			}
+			catch(Exception exp){}
+		}
+	}
+}
+
+class Threading implements Runnable
+{
+	Prime obj;
+	int s,e;
+	Threading(Prime p , int s,int e)
+	{
+		this.s=s;
+		this.e=e;
+		obj=p;
+	}
+	
+	
+	
+	
+	public void run()
+	{
+		System.out.println(Thread.currentThread().getName()+ " is start Running");
+		if(Thread.currentThread().getName().equals("Thread-0"))
+		{
+			s++;
+		}
+		synchronized(obj){
+			obj.prime(s,e);
+		}
+		
+		System.out.println(Thread.currentThread().getName() + " is complete");
+	}
+}
+class MultiThreading
+{
+	public static void main(String[] args)
+	{
+		System.out.println("Enter the Number?");
+		Scanner sc=new Scanner(System.in);
+		int n=sc.nextInt();
+		System.out.println("How many Thread?");
+		int tt=sc.nextInt();
+		int noOfElement=(n / tt );
+		Prime obj=new Prime();
+		int s=1,e=noOfElement;
+		for(int i=1;i<=tt && e<=n ;i++)
+		{
+			Thread t1=new Thread(new Threading(obj,s,e));  
+			t1.start();
+			s=e+1;
+			e+=noOfElement;
+		}
+	}
+}
